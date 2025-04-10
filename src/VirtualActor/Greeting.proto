@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option csharp_namespace = "VirtualActor";
+
+import "google/protobuf/empty.proto";
+
+message SayHelloRequest {
+  string name = 1;
+}
+
+service GreetingGrain {
+  rpc SayHello(SayHelloRequest) returns (google.protobuf.Empty);
+}
