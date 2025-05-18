@@ -7,13 +7,16 @@ public class ProcessActor : IActor
 {
     public Task ReceiveAsync(IContext context)
     {
-        if (context.Message is not SocketReceived socketReceived)
+        if (context.Message is Restarting)
         {
-            return Task.CompletedTask;
+            context.Send(context.Parent!, new ResendSocketAccepted(context.Self));
         }
-
-        var json = JsonSerializer.Deserialize<Sample>(socketReceived.Data)!;
-        Console.WriteLine("Received sample with id: {0} and name: {1}", json.Id, json.Name);
+        else if (context.Message is SocketReceived socketReceived)
+        {
+            var json = JsonSerializer.Deserialize<Sample>(socketReceived.Data)!;
+            Console.WriteLine("Received sample with id: {0} and name: {1}", json.Id, json.Name);
+            context.Send(context.Parent!, new ProcessCompleted(context.Self));
+        }
         return Task.CompletedTask;
     }
 }
