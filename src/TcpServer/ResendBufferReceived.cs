@@ -2,4 +2,4 @@
 
 namespace TcpServer;
 
-public record ResendBufferReceived(PID Id);
+public record ResendBufferReceived();

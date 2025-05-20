@@ -9,7 +9,7 @@ public class ProcessActor : IActor
     {
         if (context.Message is Restarting)
         {
-            context.Send(context.Parent!, new ResendBufferReceived(context.Self));
+            context.Send(context.Parent!, new ResendBufferReceived());
         }
         else if (context.Message is BufferReceived socketReceived)
         {

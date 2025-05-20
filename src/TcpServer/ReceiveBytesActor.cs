@@ -31,9 +31,9 @@ public class ReceiveBytesActor : IActor
             var actor = context.SpawnNamed(props, "json-serializer");
             context.Send(actor, new BufferReceived(_buffer!));
         }
-        else if (context.Message is ResendBufferReceived resend)
+        else if (context.Message is ResendBufferReceived)
         {
-            context.Send(resend.Id, new BufferReceived(_buffer!));
+            context.Send(context.Sender!, new BufferReceived(_buffer!));
         }
     }
     
