@@ -28,10 +28,10 @@ public class WaitForTcpConnectionActor(int port) : IActor
             Open();
             context.Send(context.Self, new WaitForNextConnection());
         }
-        else if (context.Message is ProcessCompleted pc)
+        else if (context.Message is ProcessCompleted)
         {
-            Console.WriteLine("stopping actor: {0}", pc.Id);
-            await context.StopAsync(pc.Id);
+            Console.WriteLine("stopping actor: {0}", context.Sender);
+            await context.StopAsync(context.Sender!);
         }
         else if(context.Message is WaitForNextConnection)
         {

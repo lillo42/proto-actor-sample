@@ -2,4 +2,4 @@
 
 namespace TcpServer;
 
-public record ProcessCompleted(PID Id);
+public record ProcessCompleted;

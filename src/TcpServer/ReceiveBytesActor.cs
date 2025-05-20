@@ -17,11 +17,11 @@ public class ReceiveBytesActor : IActor
             _socket?.Dispose();
             await context.Children.StopMany(context);
         }
-        else if (context.Message is ProcessCompleted pc)
+        else if (context.Message is ProcessCompleted)
         {
             Console.WriteLine("Process completed");
-            await context.StopAsync(pc.Id);
-            context.Send(context.Parent!, new ProcessCompleted(context.Self));
+            await context.StopAsync(context.Sender!);
+            context.Send(context.Parent!, new ProcessCompleted());
         }
         else if (context.Message is SocketAccepted socketAccepted)
         {
@@ -29,11 +29,11 @@ public class ReceiveBytesActor : IActor
             
             var props = Props.FromProducer(() => new ProcessActor());
             var actor = context.SpawnNamed(props, "json-serializer");
-            context.Send(actor, new SocketReceived(_buffer!));
+            context.Send(actor, new BufferReceived(_buffer!));
         }
-        else if (context.Message is ResendSocketAccepted resend)
+        else if (context.Message is ResendBufferReceived resend)
         {
-            context.Send(resend.Id, new SocketReceived(_buffer!));
+            context.Send(resend.Id, new BufferReceived(_buffer!));
         }
     }
     
@@ -47,6 +47,5 @@ public class ReceiveBytesActor : IActor
         _socket = socket;
         _buffer = new byte[_socket.Available];
         await _socket.ReceiveAsync(_buffer);
-        
     }
 }

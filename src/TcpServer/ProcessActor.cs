@@ -9,13 +9,13 @@ public class ProcessActor : IActor
     {
         if (context.Message is Restarting)
         {
-            context.Send(context.Parent!, new ResendSocketAccepted(context.Self));
+            context.Send(context.Parent!, new ResendBufferReceived(context.Self));
         }
-        else if (context.Message is SocketReceived socketReceived)
+        else if (context.Message is BufferReceived socketReceived)
         {
             var json = JsonSerializer.Deserialize<Sample>(socketReceived.Data)!;
             Console.WriteLine("Received sample with id: {0} and name: {1}", json.Id, json.Name);
-            context.Send(context.Parent!, new ProcessCompleted(context.Self));
+            context.Send(context.Parent!, new ProcessCompleted());
         }
         return Task.CompletedTask;
     }
